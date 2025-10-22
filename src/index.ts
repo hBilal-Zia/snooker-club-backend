@@ -1,18 +1,19 @@
 import express, { Request, Response } from "express";
-import dotevn from "dotenv";
 import { successApiResponse } from "./utils/response.util";
 import { ApiResponse } from "./dtos/response.dto";
-dotevn.config();
+import config from "./config/config";
+import { connectDB } from "./config/database";
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = config.port;
 
 app.use(express.json());
 
-app.get("/health-check", (req: Request, res: Response<ApiResponse<null>>) => {
+app.get("/health-check", (req: Request, res: Response<ApiResponse<{}>>) => {
     return res.status(200).json(successApiResponse("Server is Up"));
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await connectDB();
     console.log(`Server listning on Port: ${PORT}`);
 });
