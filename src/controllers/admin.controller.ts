@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AdminResponseDTO, CreateAdminDTO, GetAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
+import { AdminResponseDTO, CreateAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import AdminService from "../services/admin.service";
 import { successApiResponse } from "../utils/response.util";
@@ -18,7 +18,7 @@ class AdminController {
         }
     }
 
-    async getAdmin(req: Request<GetAdminDTO,{},{},{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
+    async getAdmin(req: Request<{adminId: string},{},{},{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
         try {
             const {adminId} = req.params;
             const result = await AdminService.getAdmin(adminId);
@@ -43,7 +43,7 @@ class AdminController {
         }
     }
 
-    async upateAdmin(req: Request<GetAdminDTO,{},UpdateAdminDTO,{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
+    async upateAdmin(req: Request<{adminId: string},{},UpdateAdminDTO,{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
         try {
             const {adminId} = req.params;
             const result = await AdminService.updateAdmin(adminId, req.body);
@@ -56,7 +56,7 @@ class AdminController {
         }
     }
 
-    async deleteAdmin(req: Request<GetAdminDTO,{},{},{}>, res: Response<ApiResponse<{}>>, next: NextFunction) {
+    async deleteAdmin(req: Request<{adminId: string},{},{},{}>, res: Response<ApiResponse<{}>>, next: NextFunction) {
         try {
             const {adminId} = req.params;
             await AdminService.deleteAdmin(adminId);

@@ -17,10 +17,6 @@ export interface CreateAdminDTO {
     
 }
 
-export interface GetAdminDTO {
-    adminId: string;
-}
-
 export interface UpdateAdminDTO {
     phoneNo?: string;
     role?: string;

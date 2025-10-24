@@ -1,4 +1,4 @@
-import { AdminResponseDTO, CreateAdminDTO, GetAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
+import { AdminResponseDTO, CreateAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
 import AdminRepository from "../respositories/admin.repository";
 import HttpError from "../utils/error.util";
 import { adminToDTO } from "../utils/mappper.util";
