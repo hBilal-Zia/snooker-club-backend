@@ -22,7 +22,7 @@ class AdminRepository {
     }
 
     static async updateAdmin(id: string, updateData: any) {
-        return await Admin.findByIdAndUpdate(id, updateData)
+        return await Admin.findByIdAndUpdate(id, updateData, {new: true})
     }
 
     static async deleteAdmin(id: string) {

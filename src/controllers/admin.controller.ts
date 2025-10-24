@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AdminResponseDTO, CreateAdminDTO, GetAdminDTO } from "../dtos/admin.dto";
+import { AdminResponseDTO, CreateAdminDTO, GetAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import AdminService from "../services/admin.service";
 import { successApiResponse } from "../utils/response.util";
@@ -39,6 +39,19 @@ class AdminController {
             )
         } catch (error: any) {
             console.log("Error from Get Admins Conotroller: ", error)
+            next(error)
+        }
+    }
+
+    async upateAdmin(req: Request<GetAdminDTO,{},UpdateAdminDTO,{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
+        try {
+            const {adminId} = req.params;
+            const result = await AdminService.updateAdmin(adminId, req.body);
+            res.status(200).json(
+                successApiResponse("Admins Updated Successfully.", {admin: result})
+            )
+        } catch (error: any) {
+            console.log("Error from Update Admin Conotroller: ", error)
             next(error)
         }
     }

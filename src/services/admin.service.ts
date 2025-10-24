@@ -1,4 +1,4 @@
-import { AdminResponseDTO, CreateAdminDTO, GetAdminDTO } from "../dtos/admin.dto";
+import { AdminResponseDTO, CreateAdminDTO, GetAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
 import AdminRepository from "../respositories/admin.repository";
 import HttpError from "../utils/error.util";
 import { adminToDTO } from "../utils/mappper.util";
@@ -28,6 +28,16 @@ class AdminService {
         return admins.map((admin) => {
             return adminToDTO(admin)
         })
+    }
+
+    static async updateAdmin(adminId: string, updateData: UpdateAdminDTO): Promise<AdminResponseDTO>{
+        let admin = await AdminRepository.getAdminById(adminId);
+         if (!admin) {
+            throw new HttpError("Admin Not Found", 404);
+        }
+        const updatedAdmin = await AdminRepository.updateAdmin(adminId, updateData);
+        return adminToDTO(updatedAdmin);
+
     }
 }
 

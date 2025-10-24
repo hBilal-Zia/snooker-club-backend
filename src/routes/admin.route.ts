@@ -8,5 +8,6 @@ const adminRouter = express.Router();
 adminRouter.post("/", validateRequest(createAdminSchema), adminController.createAdmin);
 adminRouter.get("/", adminController.getAdmins)
 adminRouter.get("/:adminId", adminController.getAdmin);
+adminRouter.put("/:adminId", adminController.upateAdmin);
 
 export default adminRouter;
