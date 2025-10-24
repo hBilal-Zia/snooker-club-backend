@@ -17,7 +17,7 @@ class AuthService {
             throw new HttpError("Invlaid Credentails", 404);
         }
 
-        const tokens = createTokens(admin._id.toString())
+        const tokens = createTokens({id: admin._id.toString()})
 
         return {
             admin,
