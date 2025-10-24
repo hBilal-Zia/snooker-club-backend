@@ -21,6 +21,14 @@ class AdminService {
         const newAdmin = await AdminRepository.createAdmin(createData);
         return adminToDTO(newAdmin);
     }
+
+    static async getAdmins(): Promise<AdminResponseDTO[]>{
+        let admins = await AdminRepository.getAdmins();
+
+        return admins.map((admin) => {
+            return adminToDTO(admin)
+        })
+    }
 }
 
 export default AdminService;

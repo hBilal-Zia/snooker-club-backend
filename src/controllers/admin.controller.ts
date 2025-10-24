@@ -30,6 +30,18 @@ class AdminController {
             next(error)
         }
     }
+
+    async getAdmins(req: Request<{},{},{},{}>, res: Response<ApiResponse<{admins: AdminResponseDTO[]}>>, next: NextFunction) {
+        try {
+            const result = await AdminService.getAdmins();
+            res.status(200).json(
+                successApiResponse("Admins Listed Successfully.", {admins: result})
+            )
+        } catch (error: any) {
+            console.log("Error from Get Admins Conotroller: ", error)
+            next(error)
+        }
+    }
 }
 
 export default new AdminController();
