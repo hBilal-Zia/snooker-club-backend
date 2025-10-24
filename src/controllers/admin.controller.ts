@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AdminResponseDTO, CreateAdminDTO } from "../dtos/admin.dto";
+import { AdminResponseDTO, CreateAdminDTO, GetAdminDTO } from "../dtos/admin.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import AdminService from "../services/admin.service";
 import { successApiResponse } from "../utils/response.util";
@@ -14,6 +14,19 @@ class AdminController {
             )
         } catch (error: any) {
             console.log("Error from Create Admin Conotroller: ", error)
+            next(error)
+        }
+    }
+
+    async getAdmin(req: Request<GetAdminDTO,{},{},{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
+        try {
+            const {adminId} = req.params;
+            const result = await AdminService.getAdmin(adminId);
+            res.status(200).json(
+                successApiResponse("Admin Found Successfully.", {admin:result})
+            )
+        } catch (error: any) {
+            console.log("Error from Get Admin Conotroller: ", error)
             next(error)
         }
     }

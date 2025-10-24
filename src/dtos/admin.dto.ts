@@ -16,3 +16,7 @@ export interface CreateAdminDTO {
     role: string;
     
 }
+
+export interface GetAdminDTO {
+    adminId: string;
+}
