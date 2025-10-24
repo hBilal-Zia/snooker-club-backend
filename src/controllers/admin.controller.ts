@@ -48,10 +48,23 @@ class AdminController {
             const {adminId} = req.params;
             const result = await AdminService.updateAdmin(adminId, req.body);
             res.status(200).json(
-                successApiResponse("Admins Updated Successfully.", {admin: result})
+                successApiResponse("Admin Updated Successfully.", {admin: result})
             )
         } catch (error: any) {
             console.log("Error from Update Admin Conotroller: ", error)
+            next(error)
+        }
+    }
+
+    async deleteAdmin(req: Request<GetAdminDTO,{},{},{}>, res: Response<ApiResponse<{}>>, next: NextFunction) {
+        try {
+            const {adminId} = req.params;
+            await AdminService.deleteAdmin(adminId);
+            res.status(200).json(
+                successApiResponse("Admin Deleted Successfully.")
+            )
+        } catch (error: any) {
+            console.log("Error from Delete Admin Conotroller: ", error)
             next(error)
         }
     }

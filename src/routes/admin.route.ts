@@ -9,5 +9,6 @@ adminRouter.post("/", validateRequest(createAdminSchema), adminController.create
 adminRouter.get("/", adminController.getAdmins)
 adminRouter.get("/:adminId", adminController.getAdmin);
 adminRouter.put("/:adminId", adminController.upateAdmin);
+adminRouter.delete("/:adminId", adminController.deleteAdmin);
 
 export default adminRouter;

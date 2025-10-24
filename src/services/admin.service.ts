@@ -39,6 +39,16 @@ class AdminService {
         return adminToDTO(updatedAdmin);
 
     }
+
+    static async deleteAdmin(adminId: string): Promise<void>{
+        let admin = await AdminRepository.getAdminById(adminId);
+         if (!admin) {
+            throw new HttpError("Admin Not Found", 404);
+        }
+        await AdminRepository.deleteAdmin(adminId);
+        return;
+
+    }
 }
 
 export default AdminService;
