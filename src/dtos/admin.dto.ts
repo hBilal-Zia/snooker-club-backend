@@ -7,3 +7,12 @@ export interface AdminResponseDTO {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface CreateAdminDTO {
+    name: string;
+    email: string;
+    password: string;
+    phoneNo: string;
+    role: string;
+    
+}

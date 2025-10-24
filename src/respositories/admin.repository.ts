@@ -1,5 +1,6 @@
 import {Types} from "mongoose";
 import { Admin } from "../models/Admin.model";
+import { CreateAdminDTO } from "../dtos/admin.dto";
 
 class AdminRepository {
 
@@ -7,8 +8,8 @@ class AdminRepository {
        return await Admin.findOne({email})
     }
 
-    static async createAdmin(createData: any) {
-        const newAdmin = new Admin({createData})
+    static async createAdmin(createData: CreateAdminDTO) {
+        const newAdmin = new Admin(createData)
         return newAdmin.save();
     }
 

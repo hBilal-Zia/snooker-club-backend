@@ -11,7 +11,7 @@ export function validateRequest(schema: ObjectSchema) {
         if (error) {
             const errorMessage = error.details[0].message;
             // const errorMessages = error.details.map((d) => d.message).join(", ");
-            throw new HttpError(errorMessage, 400)
+            next(new HttpError(errorMessage, 400))
         }
 
         next();
