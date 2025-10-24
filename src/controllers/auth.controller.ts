@@ -1,48 +1,22 @@
-import { compare } from "bcryptjs";
-import { Admin } from "../models/Admin.model";
-import * as jwt from "jsonwebtoken";
-import config from "../config/config";
+import AuthService from "../services/auth.service";
+import { NextFunction, Request, Response } from "express";
+import { LoginResponseDTO, LoginRequestDTO } from "../dtos/auth.dto";
+import { ApiResponse } from "../dtos/response.dto";
 
 class AuthController {
-    async login(req:any, res:any) {
+    async login(req: Request<{}, {}, LoginRequestDTO, {}>, res: Response<ApiResponse<LoginResponseDTO>>, next: NextFunction) {
         try {
-            const {email, password} = req.body;
-            const admin = await Admin.findOne({email});
-            if (!admin) {
-               return res.status(404).json({
-                success: false,
-                message: "Invalid Credentials"
-            }) 
-            }
-
-            const isMatched = await compare(password, admin.password);
-            if (!isMatched) {
-               return res.status(404).json({
-                success: false,
-                message: "Invalid Credentials"
-            }) 
-            }
-
-            const accessToken =  jwt.sign({data: admin._id.toString()}, config.jwtAccessKey, {expiresIn: config.accessTokenExpiry})
-            const refreshToken =  jwt.sign({data: admin._id.toString()}, config.jwtRefershKey, {expiresIn: config.refreshTokenExpiry})
-
+            const result = await AuthService.login(req.body)
             return res.status(200).json({
                 success: true,
                 message: "Login Successfull",
                 data: {
-                    admin,
-                    accessToken,
-                    refreshToken,
+                    ...result
                 }
             })
-            
-
         } catch (error: any) {
-            console.log(`Error from login Conotroller, Error: ${error.message}`)
-            res.status(500).json({
-                success: false,
-                message: "Internal Server Error"
-            })
+            console.log(`Error from login Conotroller: ${error}`)
+            next(error)
         }
     }
 }
