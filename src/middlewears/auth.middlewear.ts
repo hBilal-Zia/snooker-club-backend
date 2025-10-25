@@ -3,9 +3,9 @@ import HttpError from "../utils/error.util";
 import { verifyJwt } from "../utils/jwt.util";
 import config from "../config/config";
 import AdminRepository from "../respositories/admin.repository";
-import {Types} from "mongoose";
+import { adminToDTO } from "../utils/mappper.util";
 
-export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
+export async function verifyAdmin(req: Request<{},{},{},{}>, res: Response, next: NextFunction) {
     try {
         const token = req?.headers?.authorization?.split(' ')[1]
         if (!token) {
@@ -20,7 +20,7 @@ export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
             if (!admin) {
                 return next(new HttpError("Invalid Token", 401))
             }
-            req.admin = admin._id.toString()
+            req.admin = adminToDTO(admin)
             next();
         })
 
@@ -29,4 +29,19 @@ export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
         console.log("From Verify Admin Middlewear: ", error)
         next(error)
     }
+}
+
+export function isAuthorize(roles: string[]){
+return function(req: Request<{},{},{},{}>, res: Response, next: NextFunction) {
+    try {
+        if (!roles.includes(req.admin.role)) {
+            next( new HttpError("Action Not Allowed", 403))
+        }
+        next();
+
+    } catch (error: any) {
+        console.log("From Is Authorize Middlewear: ", error)
+        next(error)
+    }
+}
 }

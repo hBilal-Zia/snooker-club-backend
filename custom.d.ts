@@ -1,5 +1,10 @@
-declare namespace Express {
+import { AdminResponseDTO } from "./src/dtos/admin.dto";
+
+declare global{
+
+namespace Express {
        export interface Request {
-            admin: string;
+            admin: AdminResponseDTO;
         }
     }
+}
