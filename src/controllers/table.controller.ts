@@ -35,6 +35,19 @@ class TableController {
             next(error)
         }
     }
+
+    async getTables(req: Request<{}, {}, {}, {}>, res: Response<ApiResponse<{ tables: TableResponseDTO[] }>>, next: NextFunction) {
+        try {
+            const tables = await TableService.getTables();
+            return res.status(200).json(
+                successApiResponse("Tables Found Successfully", { tables })
+            )
+
+        } catch (error: any) {
+            console.log("From Get Tables Controller: ", error);
+            next(error)
+        }
+    }
 }
 
 export default new TableController();

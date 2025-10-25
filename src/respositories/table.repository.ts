@@ -19,7 +19,7 @@ class TableRepository {
         ]);
     }
 
-    static async getTablees() {
+    static async getTables() {
         return await Table.find().populate([
             {path: "branchId", select: "_id name location"},
             {path: "addedBy", select: "_id name email role phoneNo"},

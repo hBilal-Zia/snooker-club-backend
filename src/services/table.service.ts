@@ -19,6 +19,11 @@ class TableService {
         }
         return tableToDTO(table);
         }
+
+    static async getTables(): Promise<TableResponseDTO[]> {
+        const tables = await TableRepository.getTables();
+        return tables.map((table) => tableToDTO(table));
+        }
 }
 
 export default TableService;
