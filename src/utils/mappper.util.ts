@@ -1,4 +1,5 @@
 import { AdminResponseDTO } from "../dtos/admin.dto";
+import { BranchResponseDTO } from "../dtos/branch.dto";
 
 export function adminToDTO(adminDoc: any): AdminResponseDTO{
     return {
@@ -11,4 +12,13 @@ export function adminToDTO(adminDoc: any): AdminResponseDTO{
         updatedAt: adminDoc.updatedAt
     }
 
+}
+
+export function branchToDTO(branchDoc: any): BranchResponseDTO {
+    return  {
+        id: branchDoc._id.toString(),
+        name: branchDoc.name,
+        location: branchDoc.location,
+        createdBy: adminToDTO(branchDoc.createdBy)
+    }
 }
