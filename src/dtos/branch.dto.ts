@@ -16,6 +16,6 @@ export interface BranchResponseDTO {
     id: string;
     name: string;
     location: string;
-    createdBy: AdminResponseDTO;
+    createdBy?: AdminResponseDTO;
 }
 
