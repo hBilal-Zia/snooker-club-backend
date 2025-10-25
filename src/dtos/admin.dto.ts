@@ -4,8 +4,8 @@ export interface AdminResponseDTO {
     email: string;
     phoneNo: string;
     role: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface CreateAdminDTO {
