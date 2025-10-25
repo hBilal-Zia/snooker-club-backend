@@ -18,7 +18,10 @@ app.get("/health-check", (req: Request, res: Response<ApiResponse<{}>>) => {
 
 app.use((error: any, req:Request, res:Response<ApiResponse<{}>>, next: NextFunction) => {
 
-    return res.status(error.statusCode || 500).json(failureApiResponse(error.message || "Internal Server Error"))
+    const statusCode = error.statusCode || 500;
+    const message = error.statusCode? error.message: "Internal Server Error"
+
+    return res.status(statusCode).json(failureApiResponse(message))
 })
 
 app.listen(PORT, async () => {
