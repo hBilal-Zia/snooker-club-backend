@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CreateTableDTO, TableResponseDTO } from "../dtos/table.dto";
+import { CreateTableDTO, TableResponseDTO, UpdateTableDTO } from "../dtos/table.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import BranchService from "../services/branch.service";
 import TableService from "../services/table.service";
@@ -45,6 +45,21 @@ class TableController {
 
         } catch (error: any) {
             console.log("From Get Tables Controller: ", error);
+            next(error)
+        }
+    }
+
+    async upadteTable(req: Request<{tableId: string}, {}, UpdateTableDTO, {}>, res: Response<ApiResponse<{ table: TableResponseDTO }>>, next: NextFunction) {
+        try {
+            const { tableId } = req.params;
+            const { name, description, ratePerMinute } = req.body;
+            const updatedTable = await TableService.updateTable(tableId, { name, description, ratePerMinute });
+            return res.status(200).json(
+                successApiResponse("Table Updated Successfully", { table: updatedTable })
+            )
+
+        } catch (error: any) {
+            console.log("From UPdate Table Controller: ", error);
             next(error)
         }
     }

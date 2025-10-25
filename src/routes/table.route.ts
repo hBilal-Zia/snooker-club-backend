@@ -7,5 +7,6 @@ const tableRouter = express.Router();
 tableRouter.post("/",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.createTable);
 tableRouter.get("/",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.getTables);
 tableRouter.get("/:tableId",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.getTable);
+tableRouter.put("/:tableId",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.upadteTable);
 
 export default tableRouter;

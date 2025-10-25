@@ -23,7 +23,4 @@ export interface UpdateTableDTO {
     name: string;
     description: string;
     ratePerMinute: number;
-    isAvailable: boolean;
-    branchId: string;
-    addedBy: string;
 }
