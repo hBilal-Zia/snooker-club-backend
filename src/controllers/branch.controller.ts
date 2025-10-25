@@ -65,6 +65,19 @@ class BranchController {
             next(error)
         }
     }
+
+    async deleteBranch(req: Request<{ branchId: string }, {}, {}, {}>, res: Response<ApiResponse<{}>>, next: NextFunction) {
+        try {
+            const { branchId } = req.params;
+            await BranchService.deleteBranch(branchId);
+            res.status(200).json(
+                successApiResponse("Branch Deleted Successfully.")
+            )
+        } catch (error: any) {
+            console.log("Error from Delete Branch Conotroller: ", error)
+            next(error)
+        }
+    }
 }
 
 export default new BranchController();

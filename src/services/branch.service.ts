@@ -40,15 +40,15 @@ class BranchService {
 
     }
 
-    // static async deleteAdmin(adminId: string): Promise<void>{
-    //     let admin = await BranchRepository.getAdminById(adminId);
-    //      if (!admin) {
-    //         throw new HttpError("Admin Not Found", 404);
-    //     }
-    //     await BranchRepository.deleteAdmin(adminId);
-    //     return;
+    static async deleteBranch(branchId: string): Promise<void>{
+        let branch = await BranchRepository.getBranchById(branchId);
+         if (!branch) {
+            throw new HttpError("Branch Not Found", 404);
+        }
+        await BranchRepository.deleteBranch(branchId);
+        return;
 
-    // }
+    }
 }
 
 export default BranchService;
