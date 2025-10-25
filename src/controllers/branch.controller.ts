@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BranchResponseDTO, CreateBranchDTO } from "../dtos/branch.dto";
+import { BranchResponseDTO, CreateBranchDTO, UpdateBranchDTO } from "../dtos/branch.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import AdminService from "../services/admin.service";
 import BranchRepository from "../respositories/branch.repository";
@@ -45,6 +45,23 @@ class BranchController {
             )
         } catch (error: any) {
             console.log("Error from Get Branches Conotroller: ", error)
+            next(error)
+        }
+    }
+
+    async upateBranch(req: Request<{branchId: string},{},UpdateBranchDTO,{}>, res: Response<ApiResponse<{branch: BranchResponseDTO}>>, next: NextFunction) {
+        try {
+            const {branchId} = req.params;
+            const {name, location, createdBy} = req.body;
+            const adminExists = await AdminService.getAdmin(createdBy);
+            const updatedBranch = await BranchService.updateAdmin(branchId, {name, location, createdBy: adminExists.id});
+
+            return res.status(200).json(
+                successApiResponse("Branch updated Successfully", {branch: updatedBranch})
+            )
+
+        } catch (error: any) {
+            console.log("Error from Update Branch Conotroller: ", error)
             next(error)
         }
     }
