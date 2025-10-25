@@ -33,6 +33,15 @@ class TableService {
         const updatedTable = await TableRepository.updateTable(tableId, updateData);
         return tableToDTO(updatedTable);
         }
+    
+    static async deleteTable(tableId: string): Promise<void> {
+        const table = await TableRepository.getTableById(tableId);
+        if (!table) {
+            throw new HttpError("Table Not Found", 404)
+        }
+        await TableRepository.deleteTable(tableId);
+        return;
+        }
 }
 
 export default TableService;

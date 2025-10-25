@@ -8,5 +8,6 @@ tableRouter.post("/",verifyAdmin, isAuthorize(['super admin', 'admin']), tableCo
 tableRouter.get("/",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.getTables);
 tableRouter.get("/:tableId",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.getTable);
 tableRouter.put("/:tableId",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.upadteTable);
+tableRouter.delete("/:tableId",verifyAdmin, isAuthorize(['super admin', 'admin']), tableController.deleteTable);
 
 export default tableRouter;

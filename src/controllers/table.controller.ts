@@ -63,6 +63,20 @@ class TableController {
             next(error)
         }
     }
+
+    async deleteTable(req: Request<{tableId: string}, {}, {}, {}>, res: Response<ApiResponse<{}>>, next: NextFunction) {
+        try {
+            const { tableId } = req.params;
+            await TableService.deleteTable(tableId);
+            return res.status(200).json(
+                successApiResponse("Table Deleted Successfully")
+            )
+
+        } catch (error: any) {
+            console.log("From Delete Table Controller: ", error);
+            next(error)
+        }
+    }
 }
 
 export default new TableController();
