@@ -26,8 +26,8 @@ class TableController {
         try {
             const { tableId } = req.params;
             const table = await TableService.getTable(tableId);
-            return res.status(201).json(
-                successApiResponse("Table Created Successfully", { table: table })
+            return res.status(200).json(
+                successApiResponse("Table Found Successfully", { table: table })
             )
 
         } catch (error: any) {
