@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CreateTableDTO, TableResponseDTO } from "../dtos/table.dto";
 import { ApiResponse } from "../dtos/response.dto";
-import AdminService from "../services/admin.service";
 import BranchService from "../services/branch.service";
 import TableService from "../services/table.service";
 import { successApiResponse } from "../utils/response.util";
@@ -19,6 +18,20 @@ class TableController {
 
         } catch (error: any) {
             console.log("From Create Table Controller: ", error);
+            next(error)
+        }
+    }
+
+    async getTable(req: Request<{tableId: string}, {}, {}, {}>, res: Response<ApiResponse<{ table: TableResponseDTO }>>, next: NextFunction) {
+        try {
+            const { tableId } = req.params;
+            const table = await TableService.getTable(tableId);
+            return res.status(201).json(
+                successApiResponse("Table Created Successfully", { table: table })
+            )
+
+        } catch (error: any) {
+            console.log("From Get Table Controller: ", error);
             next(error)
         }
     }

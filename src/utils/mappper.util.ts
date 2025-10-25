@@ -25,7 +25,6 @@ export function branchToDTO(branchDoc: any): BranchResponseDTO {
 }
 
 export function tableToDTO(tableDoc: any): TableResponseDTO {
-    console.log(tableDoc)
     return  {
         id: tableDoc._id.toString(),
         name: tableDoc.name,

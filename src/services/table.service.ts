@@ -1,5 +1,4 @@
 import { CreateTableDTO, TableResponseDTO } from "../dtos/table.dto";
-import { Table } from "../models/Table.model";
 import TableRepository from "../respositories/table.repository";
 import HttpError from "../utils/error.util";
 import { tableToDTO } from "../utils/mappper.util";
@@ -11,6 +10,14 @@ class TableService {
             throw new HttpError("Error Creating Table", 400)
         }
         return tableToDTO(newTable);
+        }
+
+    static async getTable(tableId: string): Promise<TableResponseDTO> {
+        const table = await TableRepository.getTableById(tableId);
+        if (!table) {
+            throw new HttpError("Table Not Found", 404)
+        }
+        return tableToDTO(table);
         }
 }
 
