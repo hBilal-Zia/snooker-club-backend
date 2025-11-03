@@ -42,6 +42,21 @@ class TableService {
         await TableRepository.deleteTable(tableId);
         return;
         }
+
+    static async isTableAvailable(tableId: string) {
+        const table = await this.getTable(tableId);
+
+        if (!table.isAvailable) {
+            throw new HttpError("Table is currently occupied", 400);
+        }
+
+        return table;
+    }
+
+    static async updateTableStatus(tableId: string, status: boolean): Promise<TableResponseDTO> {
+        const updatedTable = await TableRepository.updateTable(tableId, {isAvailable: status});
+        return tableToDTO(updatedTable);
+    }
 }
 
 export default TableService;
