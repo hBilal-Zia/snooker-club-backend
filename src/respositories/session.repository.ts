@@ -13,19 +13,21 @@ class SessionRepository {
         ]);
     }
 
-    // static async getTableById(id: string) {
-    //     return await Table.findById(id).populate([
-    //         {path: "branchId", select: "_id name location"},
-    //         {path: "addedBy", select: "_id name email role phoneNo"},
-    //     ]);
-    // }
+    static async getSessionById(id: string) {
+        return await Session.findById(id).populate([
+            {path: "tableId"},
+            {path: "branchId", select: "_id name location"},
+            {path: "createdBy", select: "_id name email role phoneNo"},
+        ]);
+    }
 
-    // static async getTables() {
-    //     return await Table.find().populate([
-    //         {path: "branchId", select: "_id name location"},
-    //         {path: "addedBy", select: "_id name email role phoneNo"},
-    //     ]);
-    // }
+    static async getSessions() {
+        return await Session.find().populate([
+            {path: "tableId"},
+            {path: "branchId", select: "_id name location"},
+            {path: "createdBy", select: "_id name email role phoneNo"},
+        ]);
+    }
 
     // static async updateTable(id: string, updateData: any) {
     //     return await Table.findByIdAndUpdate(id, updateData, { new: true })

@@ -22,6 +22,34 @@ class SessionController {
         }
     }
 
+    async getSession(req: Request<{sessionId: string}, {}, {}, {}>, res: Response<ApiResponse<{ session: SessionResponseDTO }>>, next: NextFunction) {
+        try {
+            const { sessionId } = req.params;
+            const session = await SessionService.getSession(sessionId);
+
+            return res.status(200).json(
+                successApiResponse("Session Found Successfully", { session })
+            )
+
+        } catch (error: any) {
+            console.log("From Get Session Controller: ", error);
+            next(error)
+        }
+    }
+
+    async getSessions(req: Request<{}, {}, {}, {}>, res: Response<ApiResponse<{ sessions: SessionResponseDTO[] }>>, next: NextFunction) {
+        try {
+            const sessions = await SessionService.getSessions();
+            return res.status(200).json(
+                successApiResponse("Sessions Found Successfully", { sessions })
+            )
+
+        } catch (error: any) {
+            console.log("From Get Sessions Controller: ", error);
+            next(error)
+        }
+    }
+
     
 }
 

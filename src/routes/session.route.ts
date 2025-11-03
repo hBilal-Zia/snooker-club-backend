@@ -5,5 +5,7 @@ import SessionController from "../controllers/session.controller";
 const sessionRouter = express.Router();
 
 sessionRouter.post("/",verifyAdmin, isAuthorize(['super admin', 'admin']), SessionController.createSession);
+sessionRouter.get("/",verifyAdmin, isAuthorize(['super admin', 'admin']), SessionController.getSessions);
+sessionRouter.get("/:sessionId",verifyAdmin, isAuthorize(['super admin', 'admin']), SessionController.getSession);
 
 export default sessionRouter;

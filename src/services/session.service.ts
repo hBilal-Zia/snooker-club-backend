@@ -20,6 +20,19 @@ class SessionService {
         return session;
         }
 
+    static async getSession(sessionId: string): Promise<SessionResponseDTO> {
+        const session = await SessionRepository.getSessionById(sessionId);
+        if (!session) {
+            throw new HttpError("Session Not Found", 404)
+        }
+        return sessionToDTO(session);
+    }
+
+    static async getSessions(): Promise<SessionResponseDTO[]> {
+        const sessions = await SessionRepository.getSessions();
+        return sessions.map((session) => {return sessionToDTO(session)});
+    }
+
     
 }
 
