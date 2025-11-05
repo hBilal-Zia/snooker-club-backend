@@ -33,6 +33,38 @@ class SessionService {
         return sessions.map((session) => {return sessionToDTO(session)});
     }
 
+    static async endSession(sessionId: string): Promise<SessionResponseDTO> {
+        const session = await SessionRepository.getSessionById(sessionId);
+        if (!session) {
+            throw new HttpError("Session Not Found", 404)
+        }
+        if (session.endTime) {
+            throw new HttpError("Session Already Ended", 409);
+        }
+        const endTime = new Date();
+        const startTime = new Date(session.startTime);
+        const playTimeMinutes = Math.floor(
+            (endTime.getTime() - startTime.getTime()) / 60000
+        );
+
+        const table = await TableService.getTable(session.tableId._id.toString());
+
+        const amount = playTimeMinutes * table.ratePerMinute;
+
+        const endedSession = await SessionRepository.endSession(
+            sessionId,
+            endTime,
+            playTimeMinutes,
+            amount
+        );
+
+        const updatedTable = await TableService.updateTableStatus(session.tableId._id.toString(), true);
+        const updatedSession =  sessionToDTO(endedSession);
+        updatedSession.table = updatedTable
+        return updatedSession
+
+    }
+
     
 }
 

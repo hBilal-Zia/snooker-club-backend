@@ -50,6 +50,21 @@ class SessionController {
         }
     }
 
+    async endSession(req: Request<{sessionId: string}, {}, {}, {}>, res: Response<ApiResponse<{ session: SessionResponseDTO }>>, next: NextFunction) {
+        try {
+            const { sessionId } = req.params;
+            const session = await SessionService.endSession(sessionId);
+
+            return res.status(200).json(
+                successApiResponse("Session Ended Successfully", { session })
+            )
+
+        } catch (error: any) {
+            console.log("From End Session Controller: ", error);
+            next(error)
+        }
+    }
+
     
 }
 

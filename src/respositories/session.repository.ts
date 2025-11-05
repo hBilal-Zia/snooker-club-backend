@@ -29,13 +29,17 @@ class SessionRepository {
         ]);
     }
 
-    // static async updateTable(id: string, updateData: any) {
-    //     return await Table.findByIdAndUpdate(id, updateData, { new: true })
-    //    .populate([
-    //         {path: "branchId", select: "_id name location"},
-    //         {path: "addedBy", select: "_id name email role phoneNo"},
-    //     ]);
-    // }
+    static async endSession(sessionId: string, endTime: Date, playTime: number, amount: number) {
+        return await Session.findByIdAndUpdate(
+            sessionId,
+            { endTime, playTime, amount },
+            { new: true }
+        ).populate([
+            { path: "tableId"},
+            { path: "branchId", select: "_id name location" },
+            { path: "createdBy", select: "_id name email role phoneNo" },
+        ]);
+    }
 
     // static async deleteTable(id: string) {
     //     return await Table.findByIdAndDelete(id)
