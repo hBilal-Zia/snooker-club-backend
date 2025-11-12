@@ -65,6 +65,21 @@ class SessionController {
         }
     }
 
+     async updateSessionPaidStatus(req: Request<{sessionId: string}, {}, {}, {}>, res: Response<ApiResponse<{ session: SessionResponseDTO }>>, next: NextFunction) {
+        try {
+            const { sessionId } = req.params;
+            const session = await SessionService.updateSessionPaidStatus(sessionId);
+
+            return res.status(200).json(
+                successApiResponse("Session Status Updated Successfully", { session })
+            )
+
+        } catch (error: any) {
+            console.log("From End Session Controller: ", error);
+            next(error)
+        }
+    }
+
     
 }
 

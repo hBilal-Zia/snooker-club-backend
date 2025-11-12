@@ -41,9 +41,17 @@ class SessionRepository {
         ]);
     }
 
-    // static async deleteTable(id: string) {
-    //     return await Table.findByIdAndDelete(id)
-    // }
+    static async updateSessionPaidStatus(sessionId: string) {
+        return await Session.findByIdAndUpdate(
+            sessionId,
+            { isPaid: true },
+            { new: true }
+        ).populate([
+            { path: "tableId"},
+            { path: "branchId", select: "_id name location" },
+            { path: "createdBy", select: "_id name email role phoneNo" },
+        ]);
+    }
 }
 
 export default SessionRepository;

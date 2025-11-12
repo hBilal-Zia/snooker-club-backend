@@ -65,6 +65,25 @@ class SessionService {
 
     }
 
+    static async updateSessionPaidStatus(sessionId: string): Promise<SessionResponseDTO> {
+        const session = await SessionRepository.getSessionById(sessionId);
+        if (!session) {
+            throw new HttpError("Session Not Found", 404)
+        }
+
+        if (!session.endTime) {
+            throw new HttpError("Session Not Ended", 409);
+        }
+
+        if (session.isPaid) {
+            throw new HttpError("Session Already Paid", 409);
+        }
+
+        const paidSession = await SessionRepository.updateSessionPaidStatus(sessionId);
+        
+        return sessionToDTO(paidSession);
+    }
+
     
 }
 
