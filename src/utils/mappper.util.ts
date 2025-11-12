@@ -1,5 +1,6 @@
 import { AdminResponseDTO } from "../dtos/admin.dto";
 import { BranchResponseDTO } from "../dtos/branch.dto";
+import { SessionResponseDTO } from "../dtos/session.dto";
 import { TableResponseDTO } from "../dtos/table.dto";
 
 export function adminToDTO(adminDoc: any): AdminResponseDTO{
@@ -33,5 +34,20 @@ export function tableToDTO(tableDoc: any): TableResponseDTO {
         isAvailable: tableDoc.isAvailable,
         addedBy: adminToDTO(tableDoc.addedBy),
         branch: branchToDTO(tableDoc.branchId),
+    }
+}
+
+export function sessionToDTO(sessionDoc: any): SessionResponseDTO {
+    return  {
+        id: sessionDoc._id.toString(),
+        players: sessionDoc.players,
+        startTime: sessionDoc.startTime,
+        endTime: sessionDoc.endTime,
+        playTime: sessionDoc.playTime,
+        isPaid: sessionDoc.isPaid,
+        amount: sessionDoc.amount,
+        table: tableToDTO(sessionDoc.tableId),
+        branch: branchToDTO(sessionDoc.branchId),
+        createdBy: adminToDTO(sessionDoc.createdBy),
     }
 }
