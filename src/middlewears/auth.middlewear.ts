@@ -11,19 +11,13 @@ export async function verifyAdmin(req: Request<{},{},{},{}>, res: Response, next
         if (!token) {
             return next(new HttpError("Unauthorized User", 403))
         }
-        verifyJwt(token, config.jwtAccessKey, async (error:any, decoded: any) => {
-            if (error) {
-                return next(new HttpError("Invalid Token", 401))
-            }
-
-            const admin = await AdminRepository.getAdminById(decoded.id);
-            if (!admin) {
-                return next(new HttpError("Invalid Token", 401))
-            }
-            req.admin = adminToDTO(admin)
-            next();
-        })
-
+        const decoded = await verifyJwt<any>(token, config.jwtAccessKey)
+        const admin = await AdminRepository.getAdminById(decoded.id);
+        if (!admin) {
+            return next(new HttpError("Invalid Token", 401))
+        }
+        req.admin = adminToDTO(admin)
+        next();
 
     } catch (error: any) {
         console.log("From Verify Admin Middlewear: ", error)

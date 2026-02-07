@@ -15,3 +15,7 @@ export interface LoginResponseDTO{
     tokens: TokensDTO;
 
 }
+
+export interface RefreshTokenRequestDTO {
+    refreshToken: string
+}
