@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { CreateTableDTO, TableResponseDTO, UpdateTableDTO } from "../dtos/table.dto";
+import { CreateTableDTO, CreateTableRequestDTO, TableResponseDTO, UpdateTableDTO } from "../dtos/table.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import BranchService from "../services/branch.service";
 import TableService from "../services/table.service";
 import { successApiResponse } from "../utils/response.util";
 
 class TableController {
-    async createTable(req: Request<{}, {}, CreateTableDTO, {}>, res: Response<ApiResponse<{ table: TableResponseDTO }>>, next: NextFunction) {
+    async createTable(req: Request<{}, {}, CreateTableRequestDTO, {}>, res: Response<ApiResponse<{ table: TableResponseDTO }>>, next: NextFunction) {
         try {
             const { name, description, ratePerMinute, branchId } = req.body;
             const branchExists = await BranchService.getBranch(branchId);

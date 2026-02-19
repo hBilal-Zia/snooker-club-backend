@@ -24,3 +24,10 @@ export interface UpdateTableDTO {
     description: string;
     ratePerMinute: number;
 }
+
+export interface CreateTableRequestDTO {
+    name: string;
+    description: string;
+    ratePerMinute: number;
+    branchId: string;
+}
