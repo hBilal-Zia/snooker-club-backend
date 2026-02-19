@@ -29,6 +29,9 @@ class AuthService {
 
     static async refreshToken(refreshToken: RefreshTokenRequestDTO): Promise<LoginResponseDTO> {
 
+        if (!refreshToken.refreshToken.trim()) {
+            throw new HttpError("Refresh token required", 401);
+        }
         const decoded = await verifyJwt<any>(refreshToken.refreshToken, config.jwtRefershKey)
 
         const admin = await AdminRepository.getAdminById(decoded.id);
