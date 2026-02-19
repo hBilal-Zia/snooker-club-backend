@@ -30,7 +30,7 @@ class BranchService {
         })
     }
 
-    static async updateAdmin(branchId: string, updateData: UpdateBranchDTO): Promise<BranchResponseDTO>{
+    static async updateBranch(branchId: string, updateData: UpdateBranchDTO): Promise<BranchResponseDTO>{
         let branch = await BranchRepository.getBranchById(branchId);
          if (!branch) {
             throw new HttpError("Branch Not Found", 404);

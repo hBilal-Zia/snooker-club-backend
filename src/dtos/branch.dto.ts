@@ -19,3 +19,12 @@ export interface BranchResponseDTO {
     createdBy?: AdminResponseDTO;
 }
 
+export interface UpdateBranchRequestDTO {
+    name: string;
+    location: string;
+}
+
+export interface CreateBranchRequestDTO {
+    name: string;
+    location: string;
+}
