@@ -6,7 +6,7 @@ import HttpError from "../utils/error.util";
 export function validateRequest(schema: ObjectSchema) {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { error } = schema.validate(req.body, { abortEarly: false });
+            const { error } = schema.validate(req.body, { abortEarly: true });
 
         if (error) {
             const errorMessage = error.details[0].message;
