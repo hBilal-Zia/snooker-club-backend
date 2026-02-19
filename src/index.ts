@@ -4,11 +4,13 @@ import { ApiResponse } from "./dtos/response.dto";
 import config from "./config/config";
 import { connectDB } from "./config/database";
 import adminRouter from "./routes/route"
+import cors from "cors";
 
 const app = express();
 const PORT = config.port;
 
 app.use(express.json());
+app.use(cors())
 app.use("/api/v1/admin", adminRouter)
 
 app.get("/health-check", (req: Request, res: Response<ApiResponse<{}>>) => {
