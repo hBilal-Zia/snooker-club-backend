@@ -10,8 +10,8 @@ export function adminToDTO(adminDoc: any): AdminResponseDTO{
         email: adminDoc.email,
         role: adminDoc.role,
         phoneNo: adminDoc.phoneNo,
-        createdAt: adminDoc?.createdAt ?? undefined,
-        updatedAt: adminDoc?.updatedAt ?? undefined
+        // createdAt: adminDoc?.createdAt ?? undefined,
+        // updatedAt: adminDoc?.updatedAt ?? undefined
     }
 
 }

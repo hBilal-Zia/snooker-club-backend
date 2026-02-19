@@ -6,20 +6,20 @@ class BranchRepository {
     static async createBranch(createData: CreateBranchDTO) {
         const newBranch = new Branch(createData);
         await newBranch.save(); 
-        return await newBranch.populate("createdBy", "_id name email role phone createdAt updatedAt");
+        return await newBranch.populate("createdBy", "_id name email role phone");
     }
 
     static async getBranchById(id: string) {
-        return await Branch.findById(id).populate("createdBy", "_id name email role phone createdAt updatedAt");
+        return await Branch.findById(id).populate("createdBy", "_id name email role phone");
     }
 
     static async getBranches() {
-        return await Branch.find().populate("createdBy", "_id name email role phone createdAt updatedAt");
+        return await Branch.find().populate("createdBy", "_id name email role phone");
     }
 
     static async updateBranch(id: string, updateData: any) {
         return await Branch.findByIdAndUpdate(id, updateData, { new: true })
-        .populate("createdBy", "_id name email role phone createdAt updatedAt");
+        .populate("createdBy", "_id name email role phone");
     }
 
     static async deleteBranch(id: string) {
