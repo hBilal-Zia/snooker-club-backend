@@ -5,27 +5,42 @@ class SessionRepository {
 
     static async createSession(createData: createSessionDTO) {
         const newSession = new Session(createData);
-        await newSession.save(); 
+        await newSession.save();
         return await newSession.populate([
-            {path: "tableId"},
-            {path: "branchId", select: "_id name location"},
-            {path: "createdBy", select: "_id name email role phoneNo"},
+            {
+                path: "tableId",
+                populate: [
+                    { path: "branchId", select: "_id name location" },
+                    { path: "addedBy", select: "_id name email role" }
+                ],
+            },
+            { path: "createdBy", select: "_id name email role phoneNo" },
         ]);
     }
 
     static async getSessionById(id: string) {
         return await Session.findById(id).populate([
-            {path: "tableId"},
-            {path: "branchId", select: "_id name location"},
-            {path: "createdBy", select: "_id name email role phoneNo"},
+            {
+                path: "tableId",
+                populate: [
+                    { path: "branchId", select: "_id name location" },
+                    { path: "addedBy", select: "_id name email role" }
+                ],
+            },
+            { path: "createdBy", select: "_id name email role phoneNo" },
         ]);
     }
 
     static async getSessions() {
         return await Session.find().populate([
-            {path: "tableId"},
-            {path: "branchId", select: "_id name location"},
-            {path: "createdBy", select: "_id name email role phoneNo"},
+            {
+                path: "tableId",
+                populate: [
+                    { path: "branchId", select: "_id name location" },
+                    { path: "addedBy", select: "_id name email role" }
+                ],
+            },
+            { path: "createdBy", select: "_id name email role phoneNo" },
         ]);
     }
 
@@ -35,8 +50,13 @@ class SessionRepository {
             { endTime, playTime, amount },
             { new: true }
         ).populate([
-            { path: "tableId"},
-            { path: "branchId", select: "_id name location" },
+            {
+                path: "tableId",
+                populate: [
+                    { path: "branchId", select: "_id name location" },
+                    { path: "addedBy", select: "_id name email role" }
+                ],
+            },
             { path: "createdBy", select: "_id name email role phoneNo" },
         ]);
     }
@@ -47,8 +67,13 @@ class SessionRepository {
             { isPaid: true },
             { new: true }
         ).populate([
-            { path: "tableId"},
-            { path: "branchId", select: "_id name location" },
+            {
+                path: "tableId",
+                populate: [
+                    { path: "branchId", select: "_id name location" },
+                    { path: "addedBy", select: "_id name email role" }
+                ],
+            },
             { path: "createdBy", select: "_id name email role phoneNo" },
         ]);
     }

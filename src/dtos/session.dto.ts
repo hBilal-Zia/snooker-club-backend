@@ -11,7 +11,6 @@ export interface SessionResponseDTO {
     amount?: number;
     isPaid: boolean;
     table: TableResponseDTO;
-    branch: BranchResponseDTO;
     createdBy: AdminResponseDTO;
 }
 
@@ -20,4 +19,10 @@ export interface createSessionDTO {
     tableId: string;
     branchId: string;
     createdBy?: string;
+}
+
+export interface createSessionRequestDTO {
+    players: string[];
+    tableId: string;
+    branchId: string;
 }

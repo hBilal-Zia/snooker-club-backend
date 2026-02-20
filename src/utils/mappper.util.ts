@@ -47,7 +47,6 @@ export function sessionToDTO(sessionDoc: any): SessionResponseDTO {
         isPaid: sessionDoc.isPaid,
         amount: sessionDoc.amount,
         table: tableToDTO(sessionDoc.tableId),
-        branch: branchToDTO(sessionDoc.branchId),
         createdBy: adminToDTO(sessionDoc.createdBy),
     }
 }

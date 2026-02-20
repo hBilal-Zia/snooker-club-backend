@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiResponse } from "../dtos/response.dto";
 import { successApiResponse } from "../utils/response.util";
-import { createSessionDTO, SessionResponseDTO } from "../dtos/session.dto";
+import { createSessionDTO, createSessionRequestDTO, SessionResponseDTO } from "../dtos/session.dto";
 import SessionService from "../services/session.service";
 
 class SessionController {
-    async createSession(req: Request<{}, {}, createSessionDTO, {}>, res: Response<ApiResponse<{ session: SessionResponseDTO }>>, next: NextFunction) {
+    async createSession(req: Request<{}, {}, createSessionRequestDTO, {}>, res: Response<ApiResponse<{ session: SessionResponseDTO }>>, next: NextFunction) {
         try {
             const { players, tableId, branchId } = req.body;
             
