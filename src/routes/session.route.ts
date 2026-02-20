@@ -6,7 +6,7 @@ import { createSessionSchema } from "../validatiors/session.validator";
 
 const sessionRouter = express.Router();
 
-sessionRouter.post("/",verifyAdmin, isAuthorize(['super admin', 'admin']), validateRequest(createSessionSchema), SessionController.createSession);  // TODO: add validation
+sessionRouter.post("/",verifyAdmin, isAuthorize(['super admin', 'admin']), validateRequest(createSessionSchema), SessionController.createSession);
 sessionRouter.get("/",verifyAdmin, isAuthorize(['super admin', 'admin']), SessionController.getSessions);
 sessionRouter.get("/:sessionId",verifyAdmin, isAuthorize(['super admin', 'admin']), SessionController.getSession);
 sessionRouter.patch("/:sessionId/end",verifyAdmin, isAuthorize(['super admin', 'admin']), SessionController.endSession);

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { CreateTableRequestDTO } from "../dtos/table.dto";
+import { CreateTableRequestDTO, UpdateTableRequestDTO } from "../dtos/table.dto";
 
 export const createTableSchema = Joi.object<CreateTableRequestDTO>({
   name: Joi.string()
@@ -44,5 +44,43 @@ export const createTableSchema = Joi.object<CreateTableRequestDTO>({
       "string.pattern.base": "Invlaid Branch ID",
       "string.empty": "Branch ID cannot be empty",
       "any.required": "Branch ID is required",
+    }),
+});
+
+
+export const updateTableSchema = Joi.object<UpdateTableRequestDTO>({
+  name: Joi.string()
+    .trim()
+    .min(2)
+    .max(100)
+    .required()
+    .messages({
+      "string.base": "Table name must be a string",
+      "string.empty": "Table name cannot be empty",
+      "string.min": "Table name must be at least 2 characters",
+      "string.max": "Table name cannot exceed 100 characters",
+      "any.required": "Table name is required",
+    }),
+
+  description: Joi.string()
+    .trim()
+    .min(5)
+    .max(500)
+    .required()
+    .messages({
+      "string.base": "Description must be a string",
+      "string.empty": "Description cannot be empty",
+      "string.min": "Description must be at least 5 characters",
+      "string.max": "Description cannot exceed 500 characters",
+      "any.required": "Description is required",
+    }),
+
+  ratePerMinute: Joi.number()
+    .positive()
+    .required()
+    .messages({
+      "number.base": "Rate per minute must be a number",
+      "number.positive": "Rate per minute must be greater than 0",
+      "any.required": "Rate per minute is required",
     }),
 });
