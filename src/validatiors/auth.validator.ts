@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { LoginRequestDTO } from "../dtos/auth.dto";
+import { LoginRequestDTO, RefreshTokenRequestDTO } from "../dtos/auth.dto";
 
 export const loginSchema = Joi.object<LoginRequestDTO>({
     email: Joi.string().email().required().messages({
@@ -10,5 +10,12 @@ export const loginSchema = Joi.object<LoginRequestDTO>({
     password: Joi.string().required().messages({
         "string.empty": "Password cannot be empty",
         "any.required": "Password is required",
+    }),
+});
+
+export const refreshTokenSchema = Joi.object<RefreshTokenRequestDTO>({
+    refreshToken: Joi.string().trim().required().messages({
+        "string.empty": "Refresh token cannot be empty",
+        "any.required": "Refresh token is required",
     }),
 });

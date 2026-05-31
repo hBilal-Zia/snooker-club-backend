@@ -1,7 +1,10 @@
+import { genSalt, hash } from "bcryptjs";
 import { AdminResponseDTO, CreateAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
 import AdminRepository from "../respositories/admin.repository";
 import HttpError from "../utils/error.util";
 import { adminToDTO } from "../utils/mappper.util";
+
+const BCRYPT_ROUNDS = 10;
 
 class AdminService {
     static async getAdmin(adminId: string){
@@ -18,7 +21,12 @@ class AdminService {
         if (adminExists) {
             throw new HttpError("Admin Already Exists", 409);
         }
-        const newAdmin = await AdminRepository.createAdmin(createData);
+        const salt = await genSalt(BCRYPT_ROUNDS);
+        const hashedPassword = await hash(createData.password, salt);
+        const newAdmin = await AdminRepository.createAdmin({
+            ...createData,
+            password: hashedPassword,
+        });
         return adminToDTO(newAdmin);
     }
 

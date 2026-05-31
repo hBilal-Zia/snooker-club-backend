@@ -12,11 +12,11 @@ class AuthService {
         const { email, password } = loginData;
         const admin: any = await AdminRepository.getAdminByEmail(email);
         if (!admin) {
-            throw new HttpError("Invlaid Credentails", 404);
+            throw new HttpError("Invalid credentials", 401);
         }
-        const isMatched = await compare(password, admin.password)
+        const isMatched = await compare(password, admin.password);
         if (!isMatched) {
-            throw new HttpError("Invlaid Credentails", 404);
+            throw new HttpError("Invalid credentials", 401);
         }
 
         const tokens = createTokens({id: admin._id.toString()})
