@@ -1,11 +1,17 @@
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import config from "../config/config";
 import HttpError from "./error.util";
 
+const accessTokenOptions: SignOptions = {
+    expiresIn: config.accessTokenExpiry as SignOptions["expiresIn"],
+};
+const refreshTokenOptions: SignOptions = {
+    expiresIn: config.refreshTokenExpiry as SignOptions["expiresIn"],
+};
 
 export function createTokens(data: any) {
-    const accessToken = jwt.sign({ id: data.id }, config.jwtAccessKey, { expiresIn: config.accessTokenExpiry })
-    const refreshToken = jwt.sign({ id: data.id }, config.jwtRefershKey, { expiresIn: config.refreshTokenExpiry })
+    const accessToken = jwt.sign({ id: data.id }, config.jwtAccessKey, accessTokenOptions);
+    const refreshToken = jwt.sign({ id: data.id }, config.jwtRefershKey, refreshTokenOptions);
 
     return {
         accessToken,
