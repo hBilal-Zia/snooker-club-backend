@@ -7,35 +7,33 @@ import { adminToDTO } from "../utils/mappper.util";
 
 export async function verifyAdmin(req: Request<{},{},{},{}>, res: Response, next: NextFunction) {
     try {
-        const token = req?.headers?.authorization?.split(' ')[1]
+        const token = req?.headers?.authorization?.split(" ")[1];
         if (!token) {
-            return next(new HttpError("Unauthorized User", 403))
+            return next(new HttpError("No Token Found", 401));
         }
-        const decoded = await verifyJwt<any>(token, config.jwtAccessKey)
+        const decoded = await verifyJwt<any>(token, config.jwtAccessKey);
         const admin = await AdminRepository.getAdminById(decoded.id);
         if (!admin) {
-            return next(new HttpError("Invalid Token", 401))
+            return next(new HttpError("Invalid token", 401));
         }
-        req.admin = adminToDTO(admin)
-        next();
-
+        req.admin = adminToDTO(admin);
+        return next();
     } catch (error: any) {
-        console.log("From Verify Admin Middlewear: ", error)
-        next(error)
+        console.log("From Verify Admin Middlewear: ", error);
+        return next(error);
     }
 }
 
-export function isAuthorize(roles: string[]){
-return function(req: Request<{},{},{},{}>, res: Response, next: NextFunction) {
-    try {
-        if (!roles.includes(req.admin.role)) {
-            next( new HttpError("Action Not Allowed", 403))
+export function isAuthorize(roles: string[]) {
+    return function (req: Request<{},{},{},{}>, res: Response, next: NextFunction) {
+        try {
+            if (!roles.includes(req.admin.role)) {
+                return next(new HttpError("Action not allowed", 403));
+            }
+            return next();
+        } catch (error: any) {
+            console.log("From Is Authorize Middlewear: ", error);
+            return next(error);
         }
-        next();
-
-    } catch (error: any) {
-        console.log("From Is Authorize Middlewear: ", error)
-        next(error)
-    }
-}
+    };
 }

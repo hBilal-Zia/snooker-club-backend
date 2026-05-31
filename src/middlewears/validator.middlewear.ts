@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { ObjectSchema } from "joi";
-import { failureApiResponse } from "../utils/response.util";
 import HttpError from "../utils/error.util";
 
 export function validateRequest(schema: ObjectSchema) {
@@ -8,15 +7,14 @@ export function validateRequest(schema: ObjectSchema) {
         try {
             const { error } = schema.validate(req.body, { abortEarly: true });
 
-        if (error) {
-            const errorMessage = error.details[0].message;
-            // const errorMessages = error.details.map((d) => d.message).join(", ");
-            next(new HttpError(errorMessage, 400))
-        }
+            if (error) {
+                const errorMessage = error.details[0].message;
+                return next(new HttpError(errorMessage, 400));
+            }
 
-        next();
+            return next();
         } catch (error: any) {
-            next(error)
+            return next(error);
         }
     };
 }
