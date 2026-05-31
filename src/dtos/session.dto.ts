@@ -1,8 +1,7 @@
 import { AdminResponseDTO } from "./admin.dto";
-import { BranchResponseDTO } from "./branch.dto";
 import { TableResponseDTO } from "./table.dto";
 
-export interface SessionResponseDTO {
+export interface Session {
     id: string;
     players: string[];
     startTime: Date;
@@ -10,19 +9,16 @@ export interface SessionResponseDTO {
     playTime: number;
     amount?: number;
     isPaid: boolean;
+    tableId: string;
+    branchId: string;
+    createdBy: string;
+}
+
+export type SessionResponseDTO = Omit<Session, "tableId" | "branchId" | "createdBy"> & {
     table: TableResponseDTO;
     createdBy: AdminResponseDTO;
-}
+};
 
-export interface createSessionDTO {
-    players: string[];
-    tableId: string;
-    branchId: string;
-    createdBy?: string;
-}
-
-export interface createSessionRequestDTO {
-    players: string[];
-    tableId: string;
-    branchId: string;
-}
+export type CreateSessionRequestDTO = Pick<Session, "players" | "tableId" | "branchId">;
+export type CreateSessionDTO = Pick<Session, "players" | "tableId" | "branchId"> &
+    Partial<Pick<Session, "createdBy">>;

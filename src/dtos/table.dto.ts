@@ -1,39 +1,28 @@
 import { AdminResponseDTO } from "./admin.dto";
 import { BranchResponseDTO } from "./branch.dto";
 
-export interface TableResponseDTO {
-    id: string,
+export interface Table {
+    id: string;
     name: string;
     description: string;
     ratePerMinute: number;
     isAvailable: boolean;
+    branchId: string;
+    addedBy: string;
+}
+
+type TableWritable = Pick<Table, "name" | "description" | "ratePerMinute">;
+
+export type TableResponseDTO = Omit<Table, "branchId" | "addedBy"> & {
     branch: BranchResponseDTO;
     addedBy: AdminResponseDTO;
-}
+};
 
-export interface CreateTableDTO {
-    name: string;
-    description: string;
-    ratePerMinute: number;
+export type CreateTableRequestDTO = TableWritable & { branchId: string };
+export type CreateTableDTO = TableWritable & {
     branchId: string;
     addedBy?: string;
-}
+};
 
-export interface UpdateTableDTO {
-    name: string;
-    description: string;
-    ratePerMinute: number;
-}
-
-export interface CreateTableRequestDTO {
-    name: string;
-    description: string;
-    ratePerMinute: number;
-    branchId: string;
-}
-
-export interface UpdateTableRequestDTO {
-    name: string;
-    description: string;
-    ratePerMinute: number;
-}
+export type UpdateTableRequestDTO = TableWritable;
+export type UpdateTableDTO = TableWritable;

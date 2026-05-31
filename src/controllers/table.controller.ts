@@ -1,5 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { CreateTableDTO, CreateTableRequestDTO, TableResponseDTO, UpdateTableDTO } from "../dtos/table.dto";
+import {
+    CreateTableDTO,
+    CreateTableRequestDTO,
+    TableResponseDTO,
+    UpdateTableDTO,
+    UpdateTableRequestDTO,
+} from "../dtos/table.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import BranchService from "../services/branch.service";
 import TableService from "../services/table.service";
@@ -10,7 +16,14 @@ class TableController {
         try {
             const { name, description, ratePerMinute, branchId } = req.body;
             const branchExists = await BranchService.getBranch(branchId);
-            const newTable = await TableService.createTable({ name, description, ratePerMinute, branchId: branchExists.id, addedBy: req.admin.id });
+            const createData: CreateTableDTO = {
+                name,
+                description,
+                ratePerMinute,
+                branchId: branchExists.id,
+                addedBy: req.admin.id,
+            };
+            const newTable = await TableService.createTable(createData);
 
             return res.status(201).json(
                 successApiResponse("Table Created Successfully", { table: newTable })
@@ -49,11 +62,11 @@ class TableController {
         }
     }
 
-    async upadteTable(req: Request<{tableId: string}, {}, UpdateTableDTO, {}>, res: Response<ApiResponse<{ table: TableResponseDTO }>>, next: NextFunction) {
+    async upadteTable(req: Request<{tableId: string}, {}, UpdateTableRequestDTO, {}>, res: Response<ApiResponse<{ table: TableResponseDTO }>>, next: NextFunction) {
         try {
             const { tableId } = req.params;
-            const { name, description, ratePerMinute } = req.body;
-            const updatedTable = await TableService.updateTable(tableId, { name, description, ratePerMinute });
+            const updateData: UpdateTableDTO = req.body;
+            const updatedTable = await TableService.updateTable(tableId, updateData);
             return res.status(200).json(
                 successApiResponse("Table Updated Successfully", { table: updatedTable })
             )

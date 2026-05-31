@@ -1,16 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiResponse } from "../dtos/response.dto";
 import { successApiResponse } from "../utils/response.util";
-import { createSessionDTO, createSessionRequestDTO, SessionResponseDTO } from "../dtos/session.dto";
+import {
+    CreateSessionDTO,
+    CreateSessionRequestDTO,
+    SessionResponseDTO,
+} from "../dtos/session.dto";
 import SessionService from "../services/session.service";
 
 class SessionController {
-    async createSession(req: Request<{}, {}, createSessionRequestDTO, {}>, res: Response<ApiResponse<{ session: SessionResponseDTO }>>, next: NextFunction) {
+    async createSession(req: Request<{}, {}, CreateSessionRequestDTO, {}>, res: Response<ApiResponse<{ session: SessionResponseDTO }>>, next: NextFunction) {
         try {
             const { players, tableId, branchId } = req.body;
-            
-
-            const newSession = await SessionService.createSession({ players, tableId, branchId, createdBy: req.admin.id });
+            const createData: CreateSessionDTO = {
+                players,
+                tableId,
+                branchId,
+                createdBy: req.admin.id,
+            };
+            const newSession = await SessionService.createSession(createData);
 
             return res.status(201).json(
                 successApiResponse("Session Created Successfully", { session: newSession })

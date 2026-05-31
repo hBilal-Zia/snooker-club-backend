@@ -1,11 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { AdminResponseDTO, CreateAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
+import {
+    AdminResponseDTO,
+    CreateAdminDTO,
+    CreateAdminRequestDTO,
+    UpdateAdminDTO,
+    UpdateAdminRequestDTO,
+} from "../dtos/admin.dto";
 import { ApiResponse } from "../dtos/response.dto";
 import AdminService from "../services/admin.service";
 import { successApiResponse } from "../utils/response.util";
 
 class AdminController {
-    async createAdmin(req: Request<{},{},CreateAdminDTO,{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
+    async createAdmin(req: Request<{},{},CreateAdminRequestDTO,{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
         try {
             const createData: CreateAdminDTO = req.body;
             const result = await AdminService.createAdmin(createData);
@@ -43,10 +49,11 @@ class AdminController {
         }
     }
 
-    async upateAdmin(req: Request<{adminId: string},{},UpdateAdminDTO,{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
+    async upateAdmin(req: Request<{adminId: string},{},UpdateAdminRequestDTO,{}>, res: Response<ApiResponse<{admin: AdminResponseDTO}>>, next: NextFunction) {
         try {
             const {adminId} = req.params;
-            const result = await AdminService.updateAdmin(adminId, req.body);
+            const updateData: UpdateAdminDTO = req.body;
+            const result = await AdminService.updateAdmin(adminId, updateData);
             res.status(200).json(
                 successApiResponse("Admin Updated Successfully.", {admin: result})
             )

@@ -1,7 +1,7 @@
 import Joi from "joi";
-import { createSessionRequestDTO } from "../dtos/session.dto";
+import { CreateSessionRequestDTO } from "../dtos/session.dto";
 
-export const createSessionSchema = Joi.object<createSessionRequestDTO>({
+export const createSessionSchema = Joi.object<CreateSessionRequestDTO>({
   players: Joi.array()
     .items(
       Joi.string()

@@ -1,21 +1,17 @@
-import { AdminResponseDTO } from "./admin.dto";
+import { Admin, AdminResponseDTO } from "./admin.dto";
 
-export interface LoginRequestDTO{
-    email: string;
-    password: string
-}
+export type LoginDTO = Pick<Admin, "email" | "password">;
+export type LoginRequestDTO = LoginDTO;
+
+export type RefreshTokenDTO = { refreshToken: string };
+export type RefreshTokenRequestDTO = RefreshTokenDTO;
 
 export interface TokensDTO {
-  accessToken: string;
-  refreshToken: string;
+    accessToken: string;
+    refreshToken: string;
 }
 
-export interface LoginResponseDTO{
+export interface LoginResponseDTO {
     admin: AdminResponseDTO;
     tokens: TokensDTO;
-
-}
-
-export interface RefreshTokenRequestDTO {
-    refreshToken: string
 }

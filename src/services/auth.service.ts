@@ -1,5 +1,5 @@
 import { compare } from "bcryptjs";
-import { LoginResponseDTO, LoginRequestDTO, RefreshTokenRequestDTO } from "../dtos/auth.dto";
+import { LoginDTO, LoginResponseDTO, RefreshTokenDTO } from "../dtos/auth.dto";
 import AdminRepository from "../respositories/admin.repository";
 import HttpError from "../utils/error.util";
 import { createTokens, verifyJwt } from "../utils/jwt.util";
@@ -7,7 +7,7 @@ import config from "../config/config";
 import { adminToDTO } from "../utils/mappper.util";
 
 class AuthService {
-    static async login(loginData: LoginRequestDTO): Promise<LoginResponseDTO> {
+    static async login(loginData: LoginDTO): Promise<LoginResponseDTO> {
 
         const { email, password } = loginData;
         const admin: any = await AdminRepository.getAdminByEmail(email);
@@ -27,12 +27,12 @@ class AuthService {
         }
     }
 
-    static async refreshToken(refreshToken: RefreshTokenRequestDTO): Promise<LoginResponseDTO> {
+    static async refreshToken(input: RefreshTokenDTO): Promise<LoginResponseDTO> {
 
-        if (!refreshToken.refreshToken.trim()) {
+        if (!input.refreshToken.trim()) {
             throw new HttpError("Refresh token required", 401);
         }
-        const decoded = await verifyJwt<any>(refreshToken.refreshToken, config.jwtRefershKey)
+        const decoded = await verifyJwt<any>(input.refreshToken, config.jwtRefershKey)
 
         const admin = await AdminRepository.getAdminById(decoded.id);
         if (!admin) {

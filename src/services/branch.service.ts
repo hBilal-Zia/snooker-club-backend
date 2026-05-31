@@ -1,8 +1,7 @@
-import { AdminResponseDTO, CreateAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
 import { BranchResponseDTO, CreateBranchDTO, UpdateBranchDTO } from "../dtos/branch.dto";
 import BranchRepository from "../respositories/branch.repository";
 import HttpError from "../utils/error.util";
-import { adminToDTO, branchToDTO } from "../utils/mappper.util";
+import { branchToDTO } from "../utils/mappper.util";
 
 class BranchService {
     static async getBranch(branchId: string){

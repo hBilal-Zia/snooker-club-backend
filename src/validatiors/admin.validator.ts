@@ -1,7 +1,7 @@
 import Joi from "joi";
-import { CreateAdminDTO } from "../dtos/admin.dto";
+import { CreateAdminRequestDTO } from "../dtos/admin.dto";
 
-export const createAdminSchema = Joi.object<CreateAdminDTO>({
+export const createAdminSchema = Joi.object<CreateAdminRequestDTO>({
     name: Joi.string()
         .min(3)
         .max(50)

@@ -1,9 +1,9 @@
-import { createSessionDTO } from "../dtos/session.dto";
+import { CreateSessionDTO } from "../dtos/session.dto";
 import { Session } from "../models/Session.model";
 
 class SessionRepository {
 
-    static async createSession(createData: createSessionDTO) {
+    static async createSession(createData: CreateSessionDTO) {
         const newSession = new Session(createData);
         await newSession.save();
         return await newSession.populate([

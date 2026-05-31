@@ -1,30 +1,18 @@
 import { AdminResponseDTO } from "./admin.dto";
 
-export interface CreateBranchDTO {
-    name: string;
-    location: string;
-    createdBy: string;
-}
-
-export interface UpdateBranchDTO {
-    name: string;
-    location: string;
-    createdBy: string;
-}
-
-export interface BranchResponseDTO {
+export interface Branch {
     id: string;
     name: string;
     location: string;
+    createdBy: string;
+}
+
+export type BranchResponseDTO = Omit<Branch, "createdBy"> & {
     createdBy?: AdminResponseDTO;
-}
+};
 
-export interface UpdateBranchRequestDTO {
-    name: string;
-    location: string;
-}
+export type CreateBranchRequestDTO = Pick<Branch, "name" | "location">;
+export type CreateBranchDTO = Pick<Branch, "name" | "location" | "createdBy">;
 
-export interface CreateBranchRequestDTO {
-    name: string;
-    location: string;
-}
+export type UpdateBranchRequestDTO = Pick<Branch, "name" | "location">;
+export type UpdateBranchDTO = Pick<Branch, "name" | "location" | "createdBy">;
