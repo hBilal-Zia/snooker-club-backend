@@ -1,23 +1,57 @@
+import mongoose from "mongoose";
 import { CreateSessionDTO, SessionResponseDTO } from "../dtos/session.dto";
 import SessionRepository from "../respositories/session.repository";
 import HttpError from "../utils/error.util";
 import { sessionToDTO } from "../utils/mappper.util";
-import BranchService from "./branch.service";
 import TableService from "./table.service";
 
 class SessionService {
     static async createSession(createData: CreateSessionDTO): Promise<SessionResponseDTO> {
-        const branchExists = await BranchService.getBranch(createData.branchId);
-        const isTableAvailable = await TableService.isTableAvailable(createData.tableId);
-        const newSession = await SessionRepository.createSession(createData);
-        if (!newSession) {
-            throw new HttpError("Error Creating Session", 400)
+        const mongoSession = await mongoose.startSession();
+        try {
+            mongoSession.startTransaction();
+            let createdSession: SessionResponseDTO | null = null;
+
+            const table = await TableService.getTableByIdAndBranch(createData.tableId, createData.branchId, mongoSession);
+            if (!table) {
+                throw new HttpError("Table Not Found", 404);
+            }
+
+            if (!table.isAvailable) {
+                throw new HttpError("Table is currently occupied", 409);
+            }
+
+            const newSession = await SessionRepository.createSession(createData, mongoSession);
+            if (!newSession) {
+                throw new HttpError("Error Creating Session", 400);
+            }
+
+            const tableLocked = await TableService.updateTableStatus(
+                createData.tableId,
+                false,
+                mongoSession
+            );
+
+            if (!tableLocked) {
+                throw new HttpError("Error Updating Table Status", 400);
+            }
+
+            createdSession = sessionToDTO(newSession);
+            createdSession.table = tableLocked;
+
+            await mongoSession.commitTransaction();
+
+            if (!createdSession) {
+                throw new HttpError("Error Creating Session", 400);
+            }
+
+            return createdSession;
+        } catch (error) {
+            await mongoSession.abortTransaction();
+            throw error;
+        } finally {
+            await mongoSession.endSession();
         }
-        let session = sessionToDTO(newSession)
-        const updatedTable = await TableService.updateTableStatus(createData.tableId, false)
-        session.table = updatedTable;
-        // return sessionToDTO(newSession);
-        return session;
         }
 
     static async getSession(sessionId: string): Promise<SessionResponseDTO> {
@@ -34,34 +68,71 @@ class SessionService {
     }
 
     static async endSession(sessionId: string): Promise<SessionResponseDTO> {
-        const session = await SessionRepository.getSessionById(sessionId);
-        if (!session) {
-            throw new HttpError("Session Not Found", 404)
+        const mongoSession = await mongoose.startSession();
+        try {
+            mongoSession.startTransaction();
+            let endedSession: SessionResponseDTO | null = null;
+
+            const sessionDoc = await SessionRepository.getSessionById(sessionId, mongoSession);
+            if (!sessionDoc) {
+                throw new HttpError("Session Not Found", 404);
+            }
+
+            const session = sessionToDTO(sessionDoc);
+
+            if (session.endTime) {
+                throw new HttpError("Session Already Ended", 409);
+            }
+
+            const sessionTable = session.table;
+
+            const endTime = new Date();
+            const startTime = new Date(session.startTime);
+            const playTimeMinutes = Math.max(
+                0,
+                Math.floor((endTime.getTime() - startTime.getTime()) / 60000)
+            );
+
+            const amount = playTimeMinutes * sessionTable.ratePerMinute;
+
+            const ended = await SessionRepository.endSession(
+                sessionId,
+                endTime,
+                playTimeMinutes,
+                amount,
+                mongoSession
+            );
+
+            if (!ended) {
+                throw new HttpError("Error Ending Session", 400);
+            }
+
+            const updatedTable = await TableService.updateTableStatus(
+                sessionTable.id,
+                true,
+                mongoSession
+            );
+
+            if (!updatedTable) {
+                throw new HttpError("Error Updating Table Status", 400);
+            }
+
+            endedSession = sessionToDTO(ended);
+            endedSession.table = updatedTable;
+
+            await mongoSession.commitTransaction();
+
+            if (!endedSession) {
+                throw new HttpError("Error Ending Session", 400);
+            }
+
+            return endedSession;
+        } catch (error) {
+            await mongoSession.abortTransaction();
+            throw error;
+        } finally {
+            await mongoSession.endSession();
         }
-        if (session.endTime) {
-            throw new HttpError("Session Already Ended", 409);
-        }
-        const endTime = new Date();
-        const startTime = new Date(session.startTime);
-        const playTimeMinutes = Math.floor(
-            (endTime.getTime() - startTime.getTime()) / 60000
-        );
-
-        const table = await TableService.getTable(session.tableId._id.toString());
-
-        const amount = playTimeMinutes * table.ratePerMinute;
-
-        const endedSession = await SessionRepository.endSession(
-            sessionId,
-            endTime,
-            playTimeMinutes,
-            amount
-        );
-
-        const updatedTable = await TableService.updateTableStatus(session.tableId._id.toString(), true);
-        const updatedSession =  sessionToDTO(endedSession);
-        updatedSession.table = updatedTable
-        return updatedSession
 
     }
 

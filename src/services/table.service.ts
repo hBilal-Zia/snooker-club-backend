@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import { CreateTableDTO, TableResponseDTO, UpdateTableDTO } from "../dtos/table.dto";
 import TableRepository from "../respositories/table.repository";
 import HttpError from "../utils/error.util";
@@ -19,6 +20,14 @@ class TableService {
         }
         return tableToDTO(table);
         }
+
+    static async getTableByIdAndBranch(tableId: string, branchId: string, transaction?: ClientSession): Promise<TableResponseDTO> {
+        const table = await TableRepository.getTableByIdAndBranch(tableId, branchId, transaction);
+        if (!table) {
+            throw new HttpError("Table Not Found", 404);
+        }
+        return tableToDTO(table);
+    }
 
     static async getTables(): Promise<TableResponseDTO[]> {
         const tables = await TableRepository.getTables();
@@ -53,8 +62,8 @@ class TableService {
         return table;
     }
 
-    static async updateTableStatus(tableId: string, status: boolean): Promise<TableResponseDTO> {
-        const updatedTable = await TableRepository.updateTable(tableId, {isAvailable: status});
+    static async updateTableStatus(tableId: string, status: boolean, transaction?: ClientSession): Promise<TableResponseDTO> {
+        const updatedTable = await TableRepository.updateTable(tableId, {isAvailable: status}, transaction);
         return tableToDTO(updatedTable);
     }
 }

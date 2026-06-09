@@ -1,7 +1,19 @@
+import { ClientSession } from "mongoose";
 import { CreateTableDTO } from "../dtos/table.dto";
 import { Table } from "../models/Table.model";
 
 class TableRepository {
+
+    static async getTableByIdAndBranch(tableId: string, branchId: string, transaction?: ClientSession) {
+        const query = Table.findOne({ _id: tableId, branchId });
+        if (transaction) {
+            query.session(transaction);
+        }
+        return await query.populate([
+            {path: "branchId", select: "_id name location", options: { session: transaction }},
+            {path: "addedBy", select: "_id name email role phoneNo", options: { session: transaction }},
+        ]);
+    }
 
     static async createTable(createData: CreateTableDTO) {
         const newTable = new Table(createData);
@@ -26,11 +38,11 @@ class TableRepository {
         ]);
     }
 
-    static async updateTable(id: string, updateData: any) {
-        return await Table.findByIdAndUpdate(id, updateData, { new: true })
+    static async updateTable(id: string, updateData: any, transaction?: ClientSession) {
+        return await Table.findByIdAndUpdate(id, updateData, { new: true, session: transaction })
        .populate([
-            {path: "branchId", select: "_id name location"},
-            {path: "addedBy", select: "_id name email role phoneNo"},
+            {path: "branchId", select: "_id name location", options: { session: transaction }},
+            {path: "addedBy", select: "_id name email role phoneNo", options: { session: transaction }},
         ]);
     }
 
