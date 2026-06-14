@@ -1,8 +1,7 @@
-import { AdminResponseDTO, CreateAdminDTO, UpdateAdminDTO } from "../dtos/admin.dto";
 import { BranchResponseDTO, CreateBranchDTO, UpdateBranchDTO } from "../dtos/branch.dto";
 import BranchRepository from "../respositories/branch.repository";
 import HttpError from "../utils/error.util";
-import { adminToDTO, branchToDTO } from "../utils/mappper.util";
+import { branchToDTO } from "../utils/mappper.util";
 
 class BranchService {
     static async getBranch(branchId: string){
@@ -30,7 +29,7 @@ class BranchService {
         })
     }
 
-    static async updateAdmin(branchId: string, updateData: UpdateBranchDTO): Promise<BranchResponseDTO>{
+    static async updateBranch(branchId: string, updateData: UpdateBranchDTO): Promise<BranchResponseDTO>{
         let branch = await BranchRepository.getBranchById(branchId);
          if (!branch) {
             throw new HttpError("Branch Not Found", 404);

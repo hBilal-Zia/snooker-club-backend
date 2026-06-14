@@ -1,18 +1,20 @@
 import { NextFunction, Request, Response } from "express";
-import { BranchResponseDTO, CreateBranchDTO, UpdateBranchDTO } from "../dtos/branch.dto";
+import { BranchResponseDTO, CreateBranchDTO, CreateBranchRequestDTO, UpdateBranchDTO, UpdateBranchRequestDTO } from "../dtos/branch.dto";
 import { ApiResponse } from "../dtos/response.dto";
-import AdminService from "../services/admin.service";
-import BranchRepository from "../respositories/branch.repository";
 import { successApiResponse } from "../utils/response.util";
 import BranchService from "../services/branch.service";
 
 class BranchController {
 
-    async createBranch(req: Request<{}, {}, CreateBranchDTO, {}>, res: Response<ApiResponse<{branch: BranchResponseDTO}>>, next: NextFunction){
+    async createBranch(req: Request<{}, {}, CreateBranchRequestDTO, {}>, res: Response<ApiResponse<{branch: BranchResponseDTO}>>, next: NextFunction){
         try {
-            const {name, location, createdBy} = req.body;
-            const adminExists = await AdminService.getAdmin(createdBy);
-            const newBranch = await BranchService.createBranch({name, location, createdBy: adminExists.id});
+            const { name, location } = req.body;
+            const createData: CreateBranchDTO = {
+                name,
+                location,
+                createdBy: req.admin.id,
+            };
+            const newBranch = await BranchService.createBranch(createData);
 
             return res.status(201).json(
                 successApiResponse("Branch Created Successfully.", {branch: newBranch})
@@ -49,12 +51,16 @@ class BranchController {
         }
     }
 
-    async upateBranch(req: Request<{branchId: string},{},UpdateBranchDTO,{}>, res: Response<ApiResponse<{branch: BranchResponseDTO}>>, next: NextFunction) {
+    async upateBranch(req: Request<{branchId: string},{}, UpdateBranchRequestDTO,{}>, res: Response<ApiResponse<{branch: BranchResponseDTO}>>, next: NextFunction) {
         try {
             const {branchId} = req.params;
-            const {name, location, createdBy} = req.body;
-            const adminExists = await AdminService.getAdmin(createdBy);
-            const updatedBranch = await BranchService.updateAdmin(branchId, {name, location, createdBy: adminExists.id});
+            const { name, location } = req.body;
+            const updateData: UpdateBranchDTO = {
+                name,
+                location,
+                createdBy: req.admin.id,
+            };
+            const updatedBranch = await BranchService.updateBranch(branchId, updateData);
 
             return res.status(200).json(
                 successApiResponse("Branch updated Successfully", {branch: updatedBranch})
